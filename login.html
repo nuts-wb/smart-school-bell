@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block bodyclass %}login-body{% endblock %}
+{% block content %}
+<div class="login">
+  <div class="login-head">
+    <svg class="deco" viewBox="0 0 390 369" preserveAspectRatio="none" aria-hidden="true">
+      <g stroke="rgba(255,255,255,.55)" stroke-width="1"><line x1="218" y1="31" x2="253" y2="2"/><line x1="315" y1="84" x2="343" y2="56"/><line x1="331" y1="218" x2="359" y2="190"/><line x1="336" y1="278" x2="364" y2="251"/><line x1="17" y1="297" x2="45" y2="269"/><line x1="30" y1="189" x2="57" y2="162"/><line x1="35" y1="112" x2="64" y2="84" stroke="rgba(255,255,255,.3)"/></g>
+    </svg>
+    <span class="dot d1"></span><span class="dot d2"></span><span class="dot d3"></span>
+    <div class="login-circle"></div>
+    <img class="login-mascot" src="{{ url_for('static', filename='img/maskot.png') }}" alt="">
+    <div class="login-title">Smart School Bell</div>
+    <div class="login-sub">{{ t('app_sub') }}</div>
+    <svg class="wave" viewBox="0 0 390 60" preserveAspectRatio="none" aria-hidden="true"><path d="M0,28 C80,40 160,62 253,60 C320,58 360,30 390,11 L390,60 L0,60 Z"/></svg>
+  </div>
+  <form class="login-card" method="post" action="{{ url_for('login') }}" autocomplete="on">
+    <input type="hidden" name="csrf" value="{{ csrf }}">
+    <label for="username">{{ t('username') }}</label>
+    <input class="login-input" id="username" name="username" type="text" placeholder="***************" autocomplete="username" required>
+    <label for="password">{{ t('password') }}</label>
+    <div class="pw-wrap">
+      <input class="login-input" id="password" name="password" type="password" placeholder="***************" autocomplete="current-password" required>
+      <button type="button" id="togglePw" aria-label="show password"><i class="bi bi-eye"></i></button>
+    </div>
+    <label class="remember"><input type="checkbox" name="remember" value="1" checked><span class="chk"></span>{{ t('remember') }}</label>
+    {% if error %}<div class="login-error">{{ error }}</div>{% endif %}
+    <button class="btn-login" type="submit">{{ t('login') }}</button>
+    <div class="db-label">{{ t('db_label') }}</div>
+  </form>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+  document.getElementById('togglePw').addEventListener('click', function () {
+    var i = document.getElementById('password'), ic = this.querySelector('i');
+    var show = i.type === 'password'; i.type = show ? 'text' : 'password';
+    ic.className = 'bi ' + (show ? 'bi-eye-slash' : 'bi-eye');
+  });
+</script>
+{% endblock %}

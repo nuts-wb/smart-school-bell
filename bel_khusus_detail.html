@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% from "macros.html" import backbar, nav, toggle with context %}
+{% block content %}
+{{ backbar(item['name'] or t('b_khusus'), url_for('bel_khusus')) }}
+<main class="detail-page">
+  <h3 class="d-label">{{ t('kegiatan') }}</h3>
+  <div class="d-field name-field">
+    <span class="act-ico sm">
+      {% if item['icon'] == 'flag' %}<img src="{{ url_for('static', filename='img/bendera.png') }}" alt="">
+      {% elif item['icon'] == 'logo' %}<img src="{{ url_for('static', filename='img/logo.png') }}" alt="">
+      {% elif item['icon'] == 'mosque' %}<img src="{{ url_for('static', filename='img/masjid.png') }}" alt="">
+      {% else %}<i class="bi bi-bell-fill"></i>{% endif %}
+    </span>
+    <input id="dName" value="{{ item['name'] }}" placeholder="{{ t('nama_kegiatan') }}" maxlength="100">
+  </div>
+  <h3 class="d-label">{{ t('waktu') }}</h3>
+  <div class="d-field"><i class="bi bi-alarm-fill big"></i><input type="text" id="dTime" inputmode="numeric" maxlength="5" placeholder="07.00" value="{{ fmt_dot(item['time']) }}"></div>
+  <h3 class="d-label">{{ t('hari') }}</h3>
+  <div class="days">
+    {% for d in ['sen','sel','rab','kam','jum'] %}<button type="button" class="day {{ 'on' if d in item['days_list'] }}" data-day="{{ d }}">{{ t(d) }}</button>{% endfor %}
+  </div>
+  <h3 class="d-label">{{ t('suara_lagu') }}</h3>
+  <div class="d-field"><i class="bi bi-music-note-beamed big"></i>
+    <select id="dSound" class="snd">
+      {% for s in sounds %}<option value="{{ s }}" {{ 'selected' if s == item['sound_file'] }}>{{ s.split('/')[-1].rsplit('.', 1)[0]|replace('_', ' ')|title }}</option>{% endfor %}
+    </select>
+    <button type="button" class="play-circle" id="dPlay" aria-label="play"><i class="bi bi-play-circle"></i></button>
+  </div>
+  <h3 class="d-label">{{ t('pengingat') }}</h3>
+  <div class="d-field slim"><i class="bi bi-bell big"></i>
+    <select id="dRemind">{% for n in (5, 10, 15) %}<option value="{{ n }}" {{ 'selected' if n == item['remind_before'] }}>{{ t('menit_sebelum', n=n) }}</option>{% endfor %}</select>
+    <i class="bi bi-chevron-down"></i></div>
+  <h3 class="d-label">{{ t('status') }}</h3>
+  <div class="status-row"><b>{{ t('aktif') }}</b>{{ toggle('dActive', item['active']) }}</div>
+  <button class="btn-ssb-red block" id="dSave" type="button">{{ t('simpan') }}</button>
+</main>
+{{ nav('beranda') }}
+{% endblock %}
+{% block scripts %}
+<script>
+(function () {
+  var T = APP.T, id = {{ (item['id'])|tojson }};
+  document.querySelectorAll('.day').forEach(function (b) { b.onclick = function () { b.classList.toggle('on'); }; });
+  document.getElementById('dPlay').onclick = function () { SSB.playBell(document.getElementById('dSound').value, 0.8); };
+  document.getElementById('dSave').onclick = async function () {
+    var body = {
+      name: document.getElementById('dName').value, time: SSB.normTime(document.getElementById('dTime').value),
+      days: Array.prototype.map.call(document.querySelectorAll('.day.on'), function (b) { return b.dataset.day; }),
+      sound_file: document.getElementById('dSound').value, remind_before: parseInt(document.getElementById('dRemind').value, 10),
+      active: document.getElementById('dActive').checked };
+    var r = id ? await SSB.api('PUT', '/api/special-bells/' + id, body) : await SSB.api('POST', '/api/special-bells', body);
+    if (r.ok) { SSB.flash(T.tersimpan); setTimeout(function () { location.href = '{{ url_for('bel_khusus') }}'; }, 500); } else SSB.flash(T.kesalahan);
+  };
+})();
+</script>
+{% endblock %}

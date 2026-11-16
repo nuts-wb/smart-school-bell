@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block bodyclass %}splash-body{% endblock %}
+{% block content %}
+<div class="splash">
+  {% for i in range(1, 5) %}<div class="ph p{{ i }}" style="background-image:url('{{ url_for('static', filename='img/splash%d.jpg' % i) }}')"></div>{% endfor %}
+  <div class="splash-logo"><img src="{{ url_for('static', filename='img/logo.png') }}" alt=""></div>
+  <div class="splash-title">Smart School Bell</div>
+</div>
+{% endblock %}
+{% block scripts %}<script>setTimeout(function(){ location.href = {{ target|tojson }}; }, 2500);</script>{% endblock %}

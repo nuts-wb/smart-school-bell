@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% from "macros.html" import backbar, nav, toggle with context %}
+{% block content %}
+{{ backbar(t('bunyikan_bel'), url_for('beranda')) }}
+<main class="ring-page">
+  <div class="ring-circle"><i class="bi bi-bell"></i></div>
+  <h2 class="ring-title">{{ t('bunyikan_bel') }}<br><span id="modeText">{{ t('otomatis') if bell_active else t('manual') }}</span></h2>
+  <p class="ring-sub">{{ t('pilih_jenis') }}</p>
+  <div class="menu-list">
+    <button class="menu-btn ring-btn" data-type="masuk" type="button"><i class="bi bi-bell"></i><span>{{ t('b_masuk') }}</span></button>
+    <button class="menu-btn ring-btn" data-type="istirahat" type="button"><i class="bi bi-volume-up"></i><span>{{ t('b_istirahat') }}</span></button>
+    <button class="menu-btn ring-btn" data-type="pulang" type="button"><i class="bi bi-bell"></i><span>{{ t('b_pulang') }}</span></button>
+    <a class="menu-btn" href="{{ url_for('bel_khusus') }}"><i class="bi bi-star-fill"></i><span>{{ t('b_khusus') }}</span><i class="bi bi-chevron-right chev"></i></a>
+    <button class="menu-btn" id="openSound" type="button"><i class="bi bi-gear dark"></i><span>{{ t('pengaturan_suara') }}</span><i class="bi bi-chevron-right chev"></i></button>
+  </div>
+</main>
+{{ nav('beranda') }}
+
+<div class="modal fade" id="soundModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered"><div class="modal-content ssb-dialog sound">
+    <div class="sound-head"><button type="button" class="back" data-bs-dismiss="modal" aria-label="back"><i class="bi bi-chevron-left"></i></button><h5>{{ t('pengaturan_suara') }}</h5></div>
+    <label class="f-label plain">{{ t('suara_bel') }}</label>
+    <div class="select-box"><i class="bi bi-bell"></i>
+      <select id="sType">
+        <option value="masuk">{{ t('b_masuk') }}</option><option value="istirahat">{{ t('b_istirahat') }}</option>
+        <option value="pulang">{{ t('b_pulang') }}</option><option value="khusus">{{ t('b_khusus') }}</option>
+      </select><i class="bi bi-chevron-down"></i></div>
+    <label class="f-label plain">{{ t('volume_bel') }}</label>
+    <div class="vol-row"><i class="bi bi-volume-up"></i><input type="range" min="0" max="100" id="sVol" value="80"></div>
+    <label class="f-label plain">{{ t('tes_suara') }}</label>
+    <button type="button" class="play-btn" id="sPlay"><i class="bi bi-play-fill"></i> {{ t('putar_tes') }}</button>
+    <div class="notif-row"><span>{{ t('suara_notif') }}</span>{{ toggle('sNotif', notif_sound) }}</div>
+    <button type="button" class="btn-ssb-red block" id="sSave">{{ t('simpan') }}</button>
+  </div></div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+(function () {
+  var T = APP.T, vols = {{ vols|tojson }}, current = null;
+  document.querySelectorAll('.ring-btn').forEach(function (b) {
+    b.onclick = async function () {
+      var type = b.dataset.type;
+      if (!(await SSB.confirm(T.konfirm_title, T.konfirm_desc, T.bunyikan))) return;
+      var r = await SSB.api('POST', '/api/ring', { bell_type: type, source: 'manual' });
+      if (r.ok) { SSB.playBell(SSB.defaultSound(type), (SSB.state ? SSB.state.volumes[type] : vols[type]) / 100); SSB.flash(T.bel_dibunyikan); SSB.refresh(); }
+      else SSB.flash(T.kesalahan);
+    };
+  });
+  var modal = new bootstrap.Modal(document.getElementById('soundModal'));
+  var sType = document.getElementById('sType'), sVol = document.getElementById('sVol');
+  function paintVol() { sVol.style.setProperty('--p', sVol.value + '%'); }
+  sType.onchange = function () { sVol.value = vols[sType.value]; paintVol(); };
+  sVol.oninput = function () { vols[sType.value] = parseInt(sVol.value, 10); paintVol(); };
+  document.getElementById('openSound').onclick = function () { sVol.value = vols[sType.value]; paintVol(); modal.show(); };
+  document.getElementById('sPlay').onclick = function () {
+    var t = sType.value; SSB.playBell(SSB.defaultSound(t), parseInt(sVol.value, 10) / 100);
+  };
+  document.getElementById('sSave').onclick = async function () {
+    var t = sType.value;
+    var r = await SSB.api('POST', '/api/sound-settings', { bell_type: t, volume: parseInt(sVol.value, 10), notif_sound: document.getElementById('sNotif').checked });
+    if (r.ok) { SSB.flash(T.tersimpan); modal.hide(); SSB.refresh(); } else SSB.flash(T.gagal);
+  };
+  paintVol();
+})();
+</script>
+{% endblock %}

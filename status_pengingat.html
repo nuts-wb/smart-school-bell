@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% from "macros.html" import backbar, nav with context %}
+{% block content %}
+{{ backbar(t('status_pengingat'), url_for('beranda')) }}
+<main class="rem-page">
+  <div class="rem-list" id="remList"></div>
+  <p class="rem-empty" id="remEmpty" hidden>{{ t('tidak_ada_bel') }}</p>
+</main>
+{{ nav('beranda') }}
+{% endblock %}
+{% block scripts %}
+<script>
+(function () {
+  var T = APP.T, list = document.getElementById('remList');
+  function dot(t) { return t.replace(':', '.'); }
+  function card(icon, title, desc, time, status, last) {
+    var right = status === 'terkirim' ? '<i class="bi bi-send r-ico sent"></i>' : '<i class="bi bi-clock r-ico wait"></i>';
+    return '<div class="rem-card"><i class="bi ' + icon + ' r-bell' + (last ? ' r-phone' : '') + '"></i><div class="r-txt"><b>' + title + '</b>' +
+      (desc ? '<span>' + desc + '</span>' : '') + '<span>' + dot(time) + '</span></div>' + right + '</div>';
+  }
+  function render(S) {
+    var R = S.reminders; document.getElementById('remEmpty').hidden = !!R;
+    if (!R) { list.innerHTML = ''; return; }
+    var s = R.steps;
+    list.innerHTML =
+      card('bi-bell', T.p1, T.p1d.replace('{n}', s[0].n), s[0].time, s[0].status) +
+      card('bi-bell', T.p2, T.p2d, s[1].time, s[1].status) +
+      card('bi-bell', T.p3, T.p3d, s[2].time, s[2].status) +
+      card('bi-telephone', T.p4, '', s[3].time, s[3].status, true);
+  }
+  render({{ init|tojson }});
+  SSB.onState(render);
+})();
+</script>
+{% endblock %}

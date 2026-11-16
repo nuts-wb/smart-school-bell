@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% from "macros.html" import backbar, nav with context %}
+{% block content %}
+{{ backbar(t('jadwal_khusus'), url_for('beranda')) }}
+<main class="jk-page">
+  <h2 class="jk-head">{{ t('jadwal_khusus') }}</h2>
+  <div class="jk-list">
+    {% for r in rows %}
+    <button type="button" class="jk-card" data-id="{{ r['id'] }}" data-name="{{ r['name'] }}" data-sd="{{ r['start_date'] }}" data-ed="{{ r['end_date'] }}" data-st="{{ r['start_time'] }}" data-et="{{ r['end_time'] }}">
+      <img src="{{ url_for('static', filename='img/kalender.png') }}" alt="">
+      <span class="jk-txt"><b>{{ r['name'] }}</b><span>{{ r['range'] }}</span><span>{{ fmt_dot(r['start_time']) }} - {{ fmt_dot(r['end_time']) }}</span></span>
+    </button>
+    {% endfor %}
+  </div>
+  <div class="jk-add"><button type="button" class="btn-ssb-red pill sm" id="jkAdd">{{ t('tambah') }}</button></div>
+</main>
+{{ nav('beranda') }}
+
+<div class="modal fade" id="jkModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered"><div class="modal-content ssb-dialog">
+    <h5 id="jkTitle" class="text-center"></h5>
+    <label class="f-label">{{ t('nama') }}</label><input class="ssb-input" id="jName" maxlength="100">
+    <div class="row g-2">
+      <div class="col-6"><label class="f-label">{{ t('tgl_mulai') }}</label><input type="date" class="ssb-input" id="jSd"></div>
+      <div class="col-6"><label class="f-label">{{ t('tgl_selesai') }}</label><input type="date" class="ssb-input" id="jEd"></div>
+      <div class="col-6"><label class="f-label">{{ t('jam_mulai') }}</label><input type="text" class="ssb-input" id="jSt" inputmode="numeric" maxlength="5" placeholder="08.00"></div>
+      <div class="col-6"><label class="f-label">{{ t('jam_selesai') }}</label><input type="text" class="ssb-input" id="jEt" inputmode="numeric" maxlength="5" placeholder="12.00"></div>
+    </div>
+    <div class="dlg-actions mt-3">
+      <button type="button" class="btn-ssb-outline" id="jDel">{{ t('hapus') }}</button>
+      <button type="button" class="btn-ssb-red" id="jSave">{{ t('simpan') }}</button>
+    </div>
+  </div></div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+(function () {
+  var T = APP.T, editing = null, modal = new bootstrap.Modal(document.getElementById('jkModal'));
+  function $(id) { return document.getElementById(id); }
+  function open(card) {
+    editing = card ? card.dataset.id : null;
+    $('jkTitle').textContent = card ? T.edit_khusus : T.tambah_khusus;
+    $('jName').value = card ? card.dataset.name : ''; $('jSd').value = card ? card.dataset.sd : '';
+    $('jEd').value = card ? card.dataset.ed : ''; $('jSt').value = card ? card.dataset.st.replace(':', '.') : '08.00'; $('jEt').value = card ? card.dataset.et.replace(':', '.') : '12.00';
+    $('jDel').style.display = card ? '' : 'none'; modal.show();
+  }
+  $('jkAdd').onclick = function () { open(null); };
+  document.querySelectorAll('.jk-card').forEach(function (c) { c.onclick = function () { open(c); }; });
+  $('jSave').onclick = async function () {
+    var body = { name: $('jName').value, start_date: $('jSd').value, end_date: $('jEd').value, start_time: SSB.normTime($('jSt').value), end_time: SSB.normTime($('jEt').value) };
+    var r = editing ? await SSB.api('PUT', '/api/special-schedules/' + editing, body) : await SSB.api('POST', '/api/special-schedules', body);
+    if (r.ok) location.reload(); else SSB.flash(T.kesalahan);
+  };
+  $('jDel').onclick = async function () {
+    modal.hide();
+    if (!(await SSB.confirm(T.hapus_khusus_q, T.hapus_jadwal_d, T.ya_hapus))) return;
+    var r = await SSB.api('DELETE', '/api/special-schedules/' + editing);
+    if (r.ok) location.reload(); else SSB.flash(T.kesalahan);
+  };
+})();
+</script>
+{% endblock %}

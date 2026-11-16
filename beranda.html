@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+{% from "macros.html" import topbar, nav with context %}
+{% block content %}
+{{ topbar(t('beranda')) }}
+<main class="cream">
+  <section class="hero">
+    <div class="hero-left" style="background-image:url('{{ url_for('static', filename='img/gedung.jpg') }}')">
+      <div class="hero-clock" id="clock">--:--:--</div>
+      <div class="hero-date" id="dateLine">&nbsp;</div>
+    </div>
+    <div class="hero-right">
+      <div class="hero-bell"><img src="{{ url_for('static', filename='img/lonceng.png') }}" alt=""></div>
+      <div class="hero-label">{{ t('bel_berikutnya') }}</div>
+      <div class="hero-name" id="nextName">&nbsp;</div>
+      <div class="hero-time" id="nextTime">--:--</div>
+    </div>
+  </section>
+
+  <section class="sched">
+    <div class="sched-head">
+      <span class="sched-title">{{ t('jadwal_title') }}</span>
+      <button class="btn-mini" id="btnAdd" type="button">{{ t('tambah') }}</button>
+      <button class="btn-mini" id="btnUpload" type="button"><i class="bi bi-file-earmark-fill"></i> {{ t('unggah') }}</button>
+      <input type="file" id="pdfInput" accept="application/pdf" hidden>
+    </div>
+    <div class="sched-body">
+      {% for r in rows %}
+      <div class="sched-row" data-id="{{ r['id'] }}" data-time="{{ r['time'] }}" data-activity="{{ r['activity'] }}" data-type="{{ r['bell_type'] }}" data-special="{{ r['special_id'] or '' }}">
+        <span class="s-time">{{ fmt_dot(r['time']) }}</span>
+        <span class="s-act">{{ r['activity'] }}</span>
+        {% if r['bell_type'] == 'khusus' %}<span class="s-pill special">{{ r['special_name'] }}</span>
+        {% else %}<span class="s-pill">{{ t('bel_' ~ r['bell_type']) if r['bell_type'] != 'regular' else t('regular') }}</span>{% endif %}
+        <button class="s-ico btn-edit" aria-label="edit"><i class="bi bi-pencil-square"></i></button>
+        <button class="s-ico btn-del" aria-label="delete"><i class="bi bi-trash3"></i></button>
+      </div>
+      {% else %}
+      <div class="sched-empty">{{ t('empty_schedule') }}</div>
+      {% endfor %}
+    </div>
+  </section>
+</main>
+{{ nav('beranda') }}
+
+<div class="modal fade" id="schedModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered"><div class="modal-content ssb-dialog">
+    <h5 id="schedTitle" class="text-center"></h5>
+    <label class="f-label">{{ t('waktu') }}</label><input type="text" id="fTime" class="ssb-input" inputmode="numeric" maxlength="5" placeholder="07.00">
+    <label class="f-label">{{ t('kegiatan') }}</label><input type="text" id="fAct" class="ssb-input" maxlength="100">
+    <label class="f-label">{{ t('jenis_bel') }}</label>
+    <select id="fType" class="ssb-input">
+      <option value="masuk">{{ t('bel_masuk') }}</option>
+      <option value="regular">{{ t('regular') }}</option>
+      <option value="istirahat">{{ t('bel_istirahat') }}</option>
+      <option value="pulang">{{ t('bel_pulang') }}</option>
+      {% for s in specials %}<option value="khusus:{{ s['id'] }}">{{ s['name'] }}</option>{% endfor %}
+    </select>
+    <div class="dlg-actions mt-3">
+      <button type="button" class="btn-ssb-outline" data-bs-dismiss="modal">{{ t('batal') }}</button>
+      <button type="button" class="btn-ssb-red" id="schedSave">{{ t('simpan') }}</button>
+    </div>
+  </div></div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+(function () {
+  var T = APP.T, editingId = null;
+  var modal = new bootstrap.Modal(document.getElementById('schedModal'));
+  function openForm(row) {
+    editingId = row ? row.dataset.id : null;
+    document.getElementById('schedTitle').textContent = row ? T.edit_jadwal : T.tambah_jadwal;
+    document.getElementById('fTime').value = row ? row.dataset.time.replace(':', '.') : '';
+    document.getElementById('fAct').value = row ? row.dataset.activity : '';
+    var t = row ? row.dataset.type : 'regular';
+    document.getElementById('fType').value = t === 'khusus' ? 'khusus:' + row.dataset.special : t;
+    modal.show();
+  }
+  document.getElementById('btnAdd').onclick = function () { openForm(null); };
+  document.querySelectorAll('.btn-edit').forEach(function (b) { b.onclick = function () { openForm(b.closest('.sched-row')); }; });
+  document.querySelectorAll('.btn-del').forEach(function (b) {
+    b.onclick = async function () {
+      var row = b.closest('.sched-row');
+      if (!(await SSB.confirm(T.hapus_jadwal_q, T.hapus_jadwal_d, T.ya_hapus))) return;
+      var r = await SSB.api('DELETE', '/api/schedule/' + row.dataset.id);
+      if (r.ok) location.reload(); else SSB.flash(T.kesalahan);
+    };
+  });
+  document.getElementById('schedSave').onclick = async function () {
+    var sel = document.getElementById('fType').value, body = {
+      time: SSB.normTime(document.getElementById('fTime').value), activity: document.getElementById('fAct').value,
+      bell_type: sel.split(':')[0], special_id: sel.indexOf(':') > -1 ? parseInt(sel.split(':')[1], 10) : null };
+    var r = editingId ? await SSB.api('PUT', '/api/schedule/' + editingId, body) : await SSB.api('POST', '/api/schedule', body);
+    if (r.ok) location.reload(); else SSB.flash(T.kesalahan);
+  };
+  var pdf = document.getElementById('pdfInput');
+  document.getElementById('btnUpload').onclick = function () { pdf.click(); };
+  pdf.onchange = async function () {
+    if (!pdf.files.length) return;
+    var fd = new FormData(); fd.append('file', pdf.files[0]);
+    var res = await fetch('/api/schedule/upload', { method: 'POST', headers: { 'X-CSRF-Token': APP.csrf }, body: fd });
+    var data = await res.json().catch(function () { return {}; });
+    if (res.ok && data.added > 0) { SSB.flash(T.unggah_hasil + ' (' + data.added + ')'); setTimeout(function () { location.reload(); }, 900); }
+    else SSB.flash(T.unggah_gagal);
+    pdf.value = '';
+  };
+  SSB.onState(function (S) {
+    var n = S.next, name = document.getElementById('nextName'), tm = document.getElementById('nextTime');
+    if (!n) { name.textContent = T.tidak_ada_bel; tm.textContent = '--:--'; return; }
+    var suffix = n.days_ahead === 1 ? ' (' + T.besok + ')' : (n.days_ahead > 1 ? ' (' + T.days_long[n.weekday] + ')' : '');
+    name.textContent = n.label + suffix; tm.textContent = n.time;
+  });
+})();
+</script>
+{% endblock %}

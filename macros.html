@@ -1,0 +1,40 @@
+{% macro topbar(title, with_pill=True) %}
+<header class="topbar">
+  <button class="hamburger" id="openDrawer" aria-label="menu"><i class="bi bi-list"></i></button>
+  <h1>{{ title }}</h1>
+  {% if with_pill %}
+  <button class="pill-sound" id="soundPill" type="button">
+    <span id="pillIcon">{{ '🔔' if bell_active else '🔕' }}</span>
+    <span id="pillText">{{ t('suara_aktif') if bell_active else t('suara_nonaktif') }}</span>
+  </button>
+  {% endif %}
+</header>
+<div class="drawer-wrap" id="drawerWrap">
+  <aside class="drawer">
+    <div class="drawer-head"><button class="hamburger" id="closeDrawer" aria-label="menu"><i class="bi bi-list"></i></button><h1>{{ title }}</h1></div>
+    <a class="drawer-btn" href="{{ url_for('bunyikan_bel') }}">{{ t('bunyikan_bel') }}</a>
+    <a class="drawer-btn" href="{{ url_for('jadwal_khusus') }}">{{ t('jadwal_khusus') }}</a>
+    <a class="drawer-btn" href="{{ url_for('status_pengingat') }}">{{ t('status_pengingat') }}</a>
+  </aside>
+  <div class="drawer-shade" id="drawerShade"></div>
+</div>
+{% endmacro %}
+
+{% macro backbar(title, href) %}
+<header class="backbar">
+  <a href="{{ href }}" class="back" aria-label="back"><i class="bi bi-chevron-left"></i></a>
+  <h1>{{ title }}</h1>
+</header>
+{% endmacro %}
+
+{% macro nav(active) %}
+<nav class="bottomnav">
+  <a href="{{ url_for('beranda') }}" class="{{ 'active' if active == 'beranda' }}"><span class="ni"><i class="bi bi-house-door-fill"></i><small>{{ t('beranda') }}</small></span></a>
+  <a href="{{ url_for('pengaturan') }}" class="{{ 'active' if active == 'pengaturan' }}"><span class="ni"><i class="bi bi-gear"></i><small>{{ t('pengaturan') }}</small></span></a>
+  <a href="#" id="navLogout"><span class="ni"><i class="bi bi-box-arrow-right"></i><small>{{ t('keluar') }}</small></span></a>
+</nav>
+{% endmacro %}
+
+{% macro toggle(id, on=False) %}
+<label class="ssb-toggle"><input type="checkbox" id="{{ id }}" {{ 'checked' if on }}><span class="knob"></span></label>
+{% endmacro %}

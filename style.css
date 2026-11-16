@@ -1,0 +1,292 @@
+/* Smart School Bell – gaya mengikuti desain Figma (kanvas 390 px). */
+:root{
+  --red:#e5262b; --dred:#9b1010; --bg:#fff; --surface:#fff; --text:#000; --muted:#6d6d6d;
+  --line:#000; --cream:#fff7e3; --pill:#d9d9d9; --pill-text:#333; --outer:#e6e6e6;
+  --nav-active:#f8d7dc; --tab-active:#f28f88; --soft:#f7e4e4; --gray-btn:#606261;
+  --shadow:0 8px 20px rgba(0,0,0,.16); --placeholder:#cfcfcf; --sound-pill:#fff3d6;
+}
+[data-theme="dark"]{
+  --bg:#1b1416; --surface:#2a2024; --text:#f4e9ea; --muted:#b9a9ab; --line:#8a7075; --cream:#231a1c;
+  --pill:#4a3b3e; --pill-text:#f1e4e5; --outer:#0d0809; --nav-active:#5b2a31; --tab-active:#8f3a38;
+  --soft:#3a2a2e; --gray-btn:#6f6264; --shadow:0 8px 20px rgba(0,0,0,.5); --placeholder:#74656a; --sound-pill:#3a2f22;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{font-family:'Poppins',sans-serif;background:var(--outer);color:var(--text);-webkit-font-smoothing:antialiased}
+button{font-family:inherit;cursor:pointer}
+a{color:inherit;text-decoration:none}
+h1,h2,h3,h4,h5,p{margin:0}
+.phone{position:relative;width:100%;max-width:390px;min-height:100vh;margin:0 auto;background:var(--bg);display:flex;flex-direction:column;overflow-x:hidden;box-shadow:0 0 40px rgba(0,0,0,.18)}
+.phone>main{flex:1}
+[hidden]{display:none!important}
+.serif{font-family:'Crimson Pro',serif}
+
+/* ---------- splash ---------- */
+.splash-body .phone{box-shadow:none}
+.splash{position:relative;height:100vh;min-height:700px;max-height:900px;background:#000;display:flex;flex-direction:column;gap:15px;overflow:hidden}
+.splash .ph{flex:1;background-size:cover;background-position:center;position:relative}
+.splash .ph::after{content:"";position:absolute;inset:0;background:rgba(112,0,16,.55)}
+.splash .ph.p4::after{background:rgba(70,60,70,.22)}
+.splash-logo{position:absolute;left:50%;top:41%;width:150px;height:150px;border-radius:50%;background:#dcdcdc;transform:translateX(-50%);display:flex;align-items:center;justify-content:center}
+.splash-logo img{width:76px;height:auto;margin-top:-2px}
+.splash-title{position:absolute;left:0;right:0;top:calc(41% + 160px);text-align:center;color:#fff;font:700 28px 'Poppins',sans-serif;text-shadow:0 1px 3px rgba(0,0,0,.3)}
+
+/* ---------- login ---------- */
+.login{min-height:100vh;background:var(--bg)}
+.login-head{position:relative;height:369px;background:linear-gradient(90deg,#efc9ca 0%,#d08f92 15%,#b71f25 38%,#b71c22 100%);overflow:hidden}
+.login-head .deco{position:absolute;inset:0;width:100%;height:100%}
+.login-head .dot{position:absolute;background:#616363;border-radius:50%}
+.dot.d1{width:40px;height:40px;left:97px;top:14px}.dot.d2{width:30px;height:30px;left:332px;top:109px}.dot.d3{width:20px;height:20px;left:55px;top:260px}
+.login-circle{position:absolute;left:64px;top:32px;width:260px;height:260px;border-radius:50%;background:#616363}
+.login-mascot{position:absolute;left:132px;top:77px;height:214px;width:auto}
+.login-title{position:absolute;left:0;right:0;top:296px;text-align:center;color:#fff;font:700 28px/1.1 'Poppins',sans-serif}
+.login-sub{position:absolute;left:0;right:0;top:326px;text-align:center;color:#fff;font:300 14px 'Poppins',sans-serif}
+.login-head .wave{position:absolute;left:0;bottom:-1px;width:100%;height:60px;fill:var(--bg)}
+.login-card{width:330px;margin:35px auto 30px;padding:35px 21px 14px;background:#d9d9d9;border-radius:24px;box-shadow:0 12px 30px rgba(0,0,0,.2)}
+[data-theme="dark"] .login-card{background:#3a2e31}
+.login-card label{display:block;color:#666;font:400 15px 'Poppins',sans-serif;margin:0 0 3px 4px}
+[data-theme="dark"] .login-card label{color:#cdbec0}
+.login-input{width:100%;height:48px;border:1px solid #f7a9cc;border-radius:14px;background:#fff;padding:0 16px;font:400 15px 'Poppins',sans-serif;color:#222;outline:none;margin-bottom:11px}
+.login-input::placeholder{color:#d2d2d2;letter-spacing:2px}
+.login-input:focus{border-color:#e873a5}
+.pw-wrap{position:relative}
+.pw-wrap button{position:absolute;right:6px;top:0;height:48px;width:40px;border:0;background:transparent;font-size:22px;color:#222}
+.pw-wrap .login-input{padding-right:44px;margin-bottom:6px}
+.remember{display:flex!important;align-items:center;gap:6px;margin:4px 0 14px 4px!important;cursor:pointer}
+.remember input{display:none}
+.remember .chk{width:18px;height:18px;border-radius:4px;background:#fff;border:1px solid #888;display:inline-block;position:relative}
+.remember input:checked+.chk{background:#6750a4;border-color:#6750a4}
+.remember input:checked+.chk::after{content:"";position:absolute;left:5px;top:1px;width:5px;height:10px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg)}
+.btn-login{display:block;width:290px;height:51px;margin:0 auto;border:0;border-radius:18px;background:var(--gray-btn);color:#fff;font:700 17px 'Poppins',sans-serif}
+.btn-login:hover{filter:brightness(1.08)}
+.login-error{color:#b3141b;font-size:12.5px;font-weight:500;margin:-6px 0 8px 6px}
+.db-label{text-align:center;font-size:10.5px;color:#7a7a7a;margin-top:12px}
+
+/* ---------- top bar, drawer, nav ---------- */
+.topbar{position:relative;height:72px;display:flex;align-items:center;padding:0 12px 0 20px;background:var(--bg)}
+.topbar h1,.drawer-head h1{font:700 24px 'Poppins',sans-serif;margin-left:20px}
+.hamburger{background:none;border:0;color:var(--text);font-size:40px;line-height:1;padding:0;display:flex}
+.pill-sound{margin-left:auto;background:var(--sound-pill);border:0;border-radius:18px;padding:6px 11px;font:400 12.5px 'Poppins',sans-serif;color:var(--text);white-space:nowrap}
+.cream{background:var(--cream);padding:16px 0 22px}
+.drawer-wrap,.ssb-toasts{position:fixed;top:0;bottom:0;left:50%;width:100%;max-width:390px;transform:translateX(-50%)}
+.drawer-wrap{z-index:1050;pointer-events:none}
+.drawer{position:absolute;left:0;top:0;bottom:0;width:300px;background:var(--red);transform:translateX(-100%);transition:transform .25s;padding:0 20px;pointer-events:auto}
+.drawer-head{height:72px;display:flex;align-items:center;padding-left:0;margin:0 -20px 38px;padding:0 20px}
+.drawer-head .hamburger,.drawer-head h1{color:#fff}
+.drawer-btn{display:flex;align-items:center;justify-content:center;height:48px;margin-bottom:10px;background:#fff;color:#000;border:1.3px solid #000;border-radius:26px;font:700 18px 'Poppins',sans-serif}
+.drawer-shade{position:absolute;left:300px;right:0;top:0;bottom:0;pointer-events:none}
+.drawer-wrap.open .drawer{transform:none}
+.drawer-wrap.open .drawer-shade{pointer-events:auto}
+.bottomnav{position:sticky;bottom:0;z-index:20;height:63px;display:flex;background:var(--bg);margin-top:auto}
+.bottomnav a{flex:1;display:flex;align-items:center;justify-content:center;color:var(--text)}
+.bottomnav .ni{display:flex;flex-direction:column;align-items:center;gap:0;padding:3px 12px 2px;border-radius:18px;min-width:62px}
+.bottomnav .ni i{font-size:22px;line-height:1.15;-webkit-text-stroke:.5px currentColor}
+.bottomnav .ni small{font-size:10.5px;font-weight:400;line-height:1.1}
+.bottomnav a.active .ni{background:var(--nav-active)}
+.bottomnav a.active i{color:#4a1f26}
+[data-theme="dark"] .bottomnav a.active i{color:#ffd3d6}
+
+/* ---------- beranda ---------- */
+.hero{position:relative;height:222px;margin:0 19px;border-radius:50px;overflow:hidden;background:linear-gradient(115deg,#ee9ca4 0%,#d92a3c 48%,#d62839 100%)}
+.hero-left{position:absolute;left:0;top:0;bottom:0;width:184px;border-radius:50px;background-size:cover;background-position:35% center}
+.hero-left::before{content:"";position:absolute;inset:0;border-radius:inherit;background:linear-gradient(180deg,rgba(236,150,165,.55),rgba(236,150,165,.35))}
+.hero-clock{position:absolute;left:5px;top:68px;z-index:2;font:800 40px/1 'Playfair Display',serif;color:#140508;white-space:nowrap}
+.hero-date{position:absolute;left:10px;top:118px;z-index:2;font:400 11.5px 'Poppins',sans-serif;color:#140508;white-space:nowrap}
+.hero-right{position:absolute;left:200px;right:8px;top:0;bottom:0}
+.hero-bell{position:absolute;left:67px;top:27px;width:54px;height:54px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center}
+.hero-bell img{width:36px}
+.hero-label{position:absolute;left:0;top:89px;font:700 11px 'Poppins',sans-serif;color:#fbcdd4;letter-spacing:.3px}
+.hero-name{position:absolute;left:0;right:0;top:107px;font:700 16px/1.25 'Poppins',sans-serif;color:#2a0e14}
+.hero-time{position:absolute;left:0;top:150px;font:700 40px/1 'Playfair Display',serif;color:#fff}
+.sched{margin:18px 19px 0;border:2px solid var(--line);border-radius:28px;background:var(--surface);overflow:hidden}
+.sched-head{display:flex;align-items:center;gap:6px;height:40px;padding:0 10px 0 11px;border-bottom:1.5px solid var(--line)}
+.sched-title{font:500 17px 'Crimson Pro',serif;font-variant:small-caps;letter-spacing:.2px;flex:1;white-space:nowrap}
+.btn-mini{background:var(--gray-btn);color:#fff;border:0;border-radius:7px;font:600 9.5px 'Poppins',sans-serif;padding:4px 8px;white-space:nowrap}
+.sched-body{min-height:60px}
+.sched-row{display:flex;align-items:center;height:34px;padding:0 10px 0 12px;border-bottom:1px solid #a9a9a9}
+.sched-row:last-child{border-bottom:0}
+.s-time{width:71px;font:400 14.5px 'Poppins',sans-serif}
+.s-act{flex:1;font:400 14px 'Poppins',sans-serif;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.s-pill{min-width:70px;text-align:center;background:var(--pill);color:var(--pill-text);border-radius:12px;padding:2px 8px;font:600 11px 'Poppins',sans-serif;white-space:nowrap}
+.s-pill.special{background:#4fae70;color:#06260f}
+.s-ico{background:none;border:0;padding:0;margin-left:7px;font-size:19px;color:var(--text);line-height:1}
+.sched-empty{padding:20px;text-align:center;font-size:13px;color:var(--muted)}
+
+/* ---------- pengaturan ---------- */
+.settings{padding-top:0}
+.tabs{display:flex;align-items:center;gap:20px;margin:48px 15px 0 15px;padding:0 0 0 12px;border-bottom:1.5px solid var(--line);height:42px}
+.tab{background:none;border:0;font:400 20px 'Crimson Pro',serif;color:var(--text);padding:3px 14px;border-radius:22px}
+.tab.active{background:var(--tab-active)}
+.card-box{margin:24px 19px 0;border:1.5px solid var(--line);border-radius:28px;background:var(--surface);overflow:hidden}
+.card-title{font:400 21px 'Crimson Pro',serif;padding:12px 22px}
+.profile-body{border-top:1.5px solid var(--line);padding:16px 26px 24px}
+.who{display:flex;align-items:center;gap:20px;margin-bottom:14px}
+.avatar{width:54px;height:54px;border-radius:50%;background:#d9d9d9;color:#000;display:flex;align-items:center;justify-content:center;font:700 26px 'Poppins',sans-serif}
+.who-name{font:700 12.5px 'Poppins',sans-serif}.who-user{font:400 12px 'Crimson Pro',serif;color:var(--muted)}
+.f-label{display:block;font:400 14px 'Poppins',sans-serif;margin:10px 0 3px}
+.f-label.serif{font:400 14px 'Crimson Pro',serif}
+.f-label.plain{font:400 15px 'Poppins',sans-serif}
+.ssb-input{width:100%;height:34px;border:1.3px solid var(--line);border-radius:10px;background:var(--surface);color:var(--text);padding:0 12px;font:400 13px 'Poppins',sans-serif;outline:none}
+.ssb-input::placeholder{color:var(--placeholder);letter-spacing:2px}
+.btn-ssb-red{background:var(--red);color:#fff;border:1px solid var(--red);border-radius:10px;height:34px;padding:0 16px;font:700 13px 'Poppins',sans-serif}
+.btn-ssb-red.pill{border-radius:18px;height:32px}
+.btn-ssb-red.sm{height:28px;padding:0 20px;font-size:12px}
+.btn-ssb-red.block{display:block;width:100%;height:46px;border:1px solid #000;font-size:19px;border-radius:10px}
+.btn-ssb-red:hover{filter:brightness(1.07)}
+.btn-ssb-outline{background:var(--surface);color:var(--text);border:1.2px solid var(--line);border-radius:10px;height:36px;font:700 15px 'Poppins',sans-serif}
+#tab-tampilan>.btn-ssb-red{margin:24px 19px 0}
+.inner-box{margin:0 18px 20px;border:1.2px solid var(--line);border-radius:10px;height:62px;display:flex;align-items:center;justify-content:space-between;padding:0 18px 0 12px}
+.serif-lg{font:400 20px 'Crimson Pro',serif}
+.lang-row{display:flex;gap:10px;padding:6px 14px 30px}
+.lang-pill{display:flex;align-items:center;gap:5px;border:1.3px solid var(--line);border-radius:16px;background:var(--surface);color:var(--text);padding:2px 9px;font:700 11.5px 'Poppins',sans-serif}
+.lang-pill.on{background:var(--red);border-color:var(--red);color:#fff}
+.logout-box{display:flex;align-items:center;justify-content:space-between;padding:12px 14px 12px 14px;border-radius:12px;margin-top:70px}
+.lo-title{font:700 14.5px 'Poppins',sans-serif}.lo-desc{font:400 11px 'Crimson Pro',serif;color:var(--muted)}
+.ssb-toggle{position:relative;width:42px;height:22px;flex:none;display:inline-block}
+.ssb-toggle input{opacity:0;position:absolute;inset:0;margin:0;cursor:pointer;z-index:2}
+.ssb-toggle .knob{position:absolute;inset:0;border:2.2px solid var(--text);border-radius:12px;transition:.2s}
+.ssb-toggle .knob::after{content:"";position:absolute;left:4px;top:3px;width:10px;height:10px;border:2px solid var(--text);border-radius:50%;transition:.2s}
+.ssb-toggle input:checked+.knob{background:var(--red);border-color:var(--red)}
+.ssb-toggle input:checked+.knob::after{left:23px;background:#fff;border-color:#fff}
+
+/* ---------- header kembali ---------- */
+.backbar{position:relative;height:72px;display:flex;align-items:center;justify-content:center;background:var(--bg)}
+.backbar h1{font:700 21px 'Poppins',sans-serif}
+.backbar .back,.sound-head .back{position:absolute;left:28px;top:50%;transform:translateY(-50%);font-size:24px;color:var(--text);-webkit-text-stroke:1.5px currentColor;background:none;border:0;padding:0}
+.chev{margin-left:auto;font-size:22px;-webkit-text-stroke:1px currentColor;color:var(--text)}
+
+/* ---------- bunyikan bel ---------- */
+.ring-page{padding:10px 0 20px;text-align:center}
+.ring-circle{width:90px;height:90px;border-radius:50%;background:var(--soft);margin:0 auto;display:flex;align-items:center;justify-content:center;font-size:46px;color:var(--text)}
+.ring-title{font:700 21px/1.3 'Poppins',sans-serif;margin-top:12px}
+.ring-sub{font:600 12.5px 'Poppins',sans-serif;margin:3px 0 22px}
+.menu-list{padding:0 46px;text-align:left}
+.menu-btn{display:flex;align-items:center;width:100%;height:55px;margin-bottom:19px;border:1.3px solid var(--line);border-radius:16px;background:var(--surface);color:var(--text);padding:0 18px 0 28px;box-shadow:var(--shadow)}
+.menu-btn>i:first-child{color:var(--dred);font-size:26px;width:34px;-webkit-text-stroke:.4px currentColor}
+.menu-btn>i.dark{color:var(--text)}
+[data-theme="dark"] .menu-btn>i:first-child{color:#ff8a8f}
+.menu-btn span{margin-left:22px;font:700 18px 'Poppins',sans-serif;flex:1;text-align:left}
+.menu-btn .chev{margin-left:0;flex:none}
+
+/* ---------- dialog / modal ---------- */
+.modal-backdrop{--bs-backdrop-opacity:.22}
+.modal-dialog{max-width:350px}
+.ssb-dialog{border:1.5px solid var(--line)!important;border-radius:24px!important;background:var(--surface)!important;color:var(--text);padding:24px 20px 22px;box-shadow:var(--shadow)}
+.ssb-dialog h5{font:700 19px 'Poppins',sans-serif;margin-bottom:6px}
+.ssb-dialog p{font:600 13px 'Poppins',sans-serif;margin:8px 0 26px}
+.dlg-actions{display:flex;justify-content:center;gap:22px}
+.dlg-actions button{width:120px;height:36px;font:700 15px 'Poppins',sans-serif}
+.dlg-actions .btn-ssb-red{border:1.2px solid #000;border-radius:10px;padding:0}
+.ssb-dialog .f-label{margin-top:12px}
+.ssb-dialog select.ssb-input{padding-right:6px}
+.sound{padding:16px 24px 22px}
+.sound-head{position:relative;height:46px;display:flex;align-items:center;justify-content:center}
+.sound-head h5{margin:0;font-size:20px}.sound-head .back{left:-6px;font-size:22px}
+.select-box{position:relative;display:flex;align-items:center;gap:14px;height:46px;border:1.2px solid var(--line);border-radius:12px;padding:0 14px 0 12px}
+.select-box>i:first-child{font-size:24px}
+.select-box select{flex:1;border:0;background:transparent;color:var(--text);font:700 16px 'Poppins',sans-serif;appearance:none;outline:none;padding:0}
+.select-box select option{color:#000}
+.select-box>i:last-child{font-size:18px;-webkit-text-stroke:1.5px currentColor;pointer-events:none}
+.vol-row{display:flex;align-items:center;gap:12px}.vol-row>i{font-size:30px}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:22px;background:transparent;outline:none;--p:70%}
+input[type=range]::-webkit-slider-runnable-track{height:3px;background:linear-gradient(to right,var(--red) var(--p),var(--text) var(--p))}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:var(--red);margin-top:-8px;border:0}
+input[type=range]::-moz-range-track{height:3px;background:var(--text)}
+input[type=range]::-moz-range-progress{height:3px;background:var(--red)}
+input[type=range]::-moz-range-thumb{width:18px;height:18px;border:0;border-radius:50%;background:var(--red)}
+.play-btn{display:flex;align-items:center;gap:14px;width:100%;height:46px;border:1.2px solid var(--line);border-radius:12px;background:var(--surface);color:var(--text);padding:0 14px;font:700 16px 'Poppins',sans-serif}
+.play-btn i{font-size:26px}
+.notif-row{display:flex;align-items:center;justify-content:space-between;margin:12px 4px 16px;font:400 16px 'Poppins',sans-serif}
+.notif-row .knob{border-color:var(--dred)}.notif-row .knob::after{border-color:var(--dred)}
+.notif-row input:checked+.knob{background:var(--dred);border-color:var(--dred)}
+
+/* ---------- bel khusus ---------- */
+.khusus-page{padding:12px 0 24px}
+.khusus-desc{text-align:center;font:400 15px/1.35 'Poppins',sans-serif;padding:0 52px;margin-bottom:26px}
+.act-card{display:flex;align-items:center;gap:10px;height:79px;margin-bottom:19px;padding:0 14px 0 15px;border:1.2px solid var(--line);border-radius:14px;background:var(--surface);box-shadow:var(--shadow);color:var(--text)}
+.act-ico{flex:none;width:60px;height:60px;border-radius:50%;background:#d9d9d9;display:flex;align-items:center;justify-content:center;overflow:hidden;color:var(--dred);font-size:28px}
+.act-ico img{width:88%;height:auto}
+.act-ico.sm{width:50px;height:50px}
+.act-txt{display:flex;flex-direction:column;flex:1;min-width:0}
+.act-txt b.long{font-size:13px;letter-spacing:-.1px}
+.act-txt b{font:700 17px/1.2 'Poppins',sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.act-txt small{font:300 15px 'Poppins',sans-serif}
+.menu-list.wide{padding:0 45px}
+.btn-add-act{display:flex;align-items:center;justify-content:center;margin:26px 45px 0;height:50px;background:var(--red);color:#fff;border:1px solid #000;border-radius:12px;font:700 19px 'Poppins',sans-serif}
+.detail-page{padding:6px 45px 26px}
+.d-label{font:700 18px 'Poppins',sans-serif;color:var(--dred);margin:18px 0 7px}
+[data-theme="dark"] .d-label{color:#ff8a8f}
+.d-field{display:flex;align-items:center;gap:16px;min-height:58px;padding:0 14px;border:1px solid var(--line);border-radius:12px;background:var(--surface);box-shadow:var(--shadow)}
+.d-field.name-field{min-height:70px}.d-field.slim{min-height:49px}
+.d-field input,.d-field select{flex:1;min-width:0;border:0;background:transparent;color:var(--text);font:600 20px 'Poppins',sans-serif;outline:none;appearance:none}
+.d-field select.snd{font-size:16px}
+.d-field.slim select{font:400 17px 'Poppins',sans-serif}
+.d-field select option{color:#000}
+.d-field .big{font-size:30px}
+.play-circle{background:none;border:0;color:var(--dred);font-size:34px;line-height:1;padding:0}
+.days{display:flex;gap:6px}
+.day{flex:1;height:39px;border:1px solid var(--line);border-radius:20px;background:var(--surface);color:var(--text);font:700 14px 'Poppins',sans-serif;padding:0}
+.day.on{background:var(--red);border-color:var(--line);color:#fff}
+.status-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;font:600 17px 'Poppins',sans-serif;padding-right:6px}
+.status-row b{font-weight:700;font-size:18px}
+.status-row+.btn-ssb-red{height:40px;font-size:19px}
+
+/* ---------- jadwal khusus ---------- */
+.jk-page{padding:6px 0 30px}
+.jk-head{font:700 20px 'Poppins',sans-serif;padding:18px 40px 12px}
+.jk-list{padding:0 46px}
+.jk-card{display:flex;align-items:center;gap:26px;width:100%;height:149px;margin-bottom:19px;padding:0 10px 0 26px;text-align:left;border:1.2px solid var(--line);border-radius:18px;background:var(--surface);color:var(--text);box-shadow:var(--shadow)}
+.jk-card img{width:70px;height:70px;flex:none}
+.jk-txt{display:flex;flex-direction:column;gap:1px}
+.jk-txt b{font:700 16px 'Poppins',sans-serif}.jk-txt span{font:400 15.5px 'Poppins',sans-serif}
+.jk-add{padding:6px 46px 0;text-align:right}
+.jk-add .btn-ssb-red{height:30px;font-size:15px;padding:0 24px}
+
+/* ---------- status pengingat ---------- */
+.rem-page{padding:22px 46px 30px}
+.rem-list{position:relative}
+.rem-list::before{content:"";position:absolute;left:36px;top:38px;bottom:48px;width:3px;background:#b4b4b4;z-index:2;pointer-events:none}
+.rem-card{position:relative;display:flex;align-items:center;gap:0;height:99px;margin-bottom:14px;border:1.2px solid var(--line);border-radius:14px;background:var(--surface);box-shadow:var(--shadow);padding:0 12px 0 20px}
+.r-bell{position:relative;z-index:3;font-size:36px;color:var(--dred);width:36px;-webkit-text-stroke:.6px currentColor;margin-right:22px}
+.r-bell.r-phone{color:#0a84ff}
+[data-theme="dark"] .r-bell:not(.r-phone){color:#ff7f84}
+.r-txt{display:flex;flex-direction:column;flex:1;min-width:0}
+.r-txt b{font:600 18px/1.25 'Poppins',sans-serif}
+.rem-card:last-child .r-txt b{font-size:15.5px}
+.r-txt span{font:400 15px/1.3 'Poppins',sans-serif}
+.r-ico{font-size:26px;flex:none}
+.r-ico.sent{color:#2dc653}.r-ico.wait{color:#ff9a2e}
+.rem-empty{text-align:center;color:var(--muted);font-size:13px;margin-top:20px}
+
+/* ---------- jadwal khusus: pilihan tanggal ---------- */
+input[type=date].ssb-input,input[type=time].ssb-input{padding:0 8px}
+
+/* ---------- notifikasi & flash ---------- */
+.ssb-toasts{z-index:2000;pointer-events:none;padding:12px 14px;display:flex;flex-direction:column;gap:10px}
+.ssb-toast{pointer-events:auto;background:var(--surface);color:var(--text);border-radius:26px;padding:14px 16px 12px;box-shadow:0 10px 30px rgba(0,0,0,.3);animation:tin .3s ease;transition:opacity .4s}
+.ssb-toast.out{opacity:0}
+@keyframes tin{from{transform:translateY(-30px);opacity:0}to{transform:none;opacity:1}}
+.t-main{display:flex;gap:14px;align-items:flex-start}
+.t-ico{flex:none;width:52px;height:52px;border-radius:12px;background:#fde6e8;display:flex;align-items:center;justify-content:center;color:var(--dred);font-size:30px}
+.t-ico.warn{background:#ffe3ad}.t-ico img{width:34px}
+.t-body{flex:1;display:flex;flex-direction:column;min-width:0}
+.t-top{display:flex;justify-content:space-between;font:300 14px 'Poppins',sans-serif;color:var(--muted)}
+.t-top em{font-style:normal;color:#999;font-size:13px}
+.t-body b{font:700 16px/1.3 'Poppins',sans-serif}
+.t-l2,.t-l3{font:400 14px/1.35 'Poppins',sans-serif}
+.t-act{display:block;margin:10px -4px 0;padding-top:7px;border-top:1px solid #999;text-align:center;color:var(--red);font:700 15px 'Poppins',sans-serif}
+.ssb-flash{position:fixed;left:50%;bottom:84px;transform:translateX(-50%) translateY(10px);background:rgba(30,30,30,.92);color:#fff;border-radius:18px;padding:8px 16px;font:500 13px 'Poppins',sans-serif;opacity:0;pointer-events:none;transition:.25s;z-index:2100;max-width:340px;text-align:center}
+.ssb-flash.show{opacity:1;transform:translateX(-50%)}
+
+@media (min-width:500px){
+  .phone{box-shadow:0 0 60px rgba(0,0,0,.25)}
+}
+
+/* ---------- cadangan bila Bootstrap CSS tidak termuat ---------- */
+html.no-bs .modal{position:fixed;inset:0;display:none;z-index:1055;overflow:auto;background:rgba(0,0,0,.22)}
+html.no-bs .modal-dialog{margin:0 auto;min-height:100vh;display:flex;align-items:center;width:calc(100% - 24px)}
+html.no-bs .modal-content{width:100%}
+html.no-bs .row{display:flex;flex-wrap:wrap;gap:0 8px}
+html.no-bs .col-6{flex:1 1 calc(50% - 8px);min-width:0}
+html.no-bs .text-center{text-align:center}
+html.no-bs .mt-3{margin-top:1rem}html.no-bs .mt-4{margin-top:1.5rem}

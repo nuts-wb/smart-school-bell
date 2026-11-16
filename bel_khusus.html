@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% from "macros.html" import backbar, nav with context %}
+{% block content %}
+{{ backbar(t('b_khusus'), url_for('bunyikan_bel')) }}
+<main class="khusus-page">
+  <p class="khusus-desc">{{ t('pilih_kegiatan') }}</p>
+  <div class="menu-list wide">
+    {% for it in items %}
+    <a class="act-card" href="{{ url_for('bel_khusus_detail', sid=it['id']) }}">
+      <span class="act-ico">
+        {% if it['icon'] == 'flag' %}<img src="{{ url_for('static', filename='img/bendera.png') }}" alt="">
+        {% elif it['icon'] == 'logo' %}<img src="{{ url_for('static', filename='img/logo.png') }}" alt="">
+        {% elif it['icon'] == 'mosque' %}<img src="{{ url_for('static', filename='img/masjid.png') }}" alt="">
+        {% else %}<i class="bi bi-bell-fill"></i>{% endif %}
+      </span>
+      <span class="act-txt"><b class="{{ 'long' if it['name']|length > 18 }}">{{ it['name'] }}</b><small>{{ t('pukul') }} {{ fmt_dot(it['time']) }}</small></span>
+      <i class="bi bi-chevron-right chev"></i>
+    </a>
+    {% endfor %}
+  </div>
+  <a class="btn-add-act" href="{{ url_for('bel_khusus_baru') }}">{{ t('tambah_kegiatan') }}</a>
+</main>
+{{ nav('beranda') }}
+{% endblock %}
